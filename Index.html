@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenCord Prototype</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #313338; color: white; font-family: sans-serif; }
+        .sidebar { background-color: #1E1F22; width: 72px; }
+        .channels { background-color: #2B2D31; width: 240px; }
+        .chat { background-color: #313338; flex-grow: 1; }
+    </style>
+</head>
+<body class="flex h-screen">
+
+    <div class="sidebar flex flex-col items-center py-3 space-y-2">
+        <div class="w-12 h-12 bg-indigo-500 rounded-2xl flex items-center justify-center cursor-pointer hover:rounded-xl transition-all">
+            <span>🏠</span>
+        </div>
+        <div class="border-t border-gray-700 w-8"></div>
+        <div class="w-12 h-12 bg-gray-700 rounded-3xl flex items-center justify-center cursor-pointer hover:bg-green-600 hover:rounded-xl transition-all">
+            <span>+</span>
+        </div>
+    </div>
+
+    <div class="channels flex flex-col">
+        <div class="p-4 shadow-md font-bold border-b border-black">Server Name</div>
+        <div class="p-2 mt-4 space-y-1">
+            <div class="text-gray-400 uppercase text-xs font-bold px-2">Text Channels</div>
+            <div class="bg-gray-600 text-white p-2 rounded cursor-pointer"># general</div>
+            <div class="text-gray-400 p-2 rounded hover:bg-gray-700 cursor-pointer"># help-desk</div>
+        </div>
+    </div>
+
+    <div class="chat flex flex-col">
+        <div id="message-box" class="flex-grow p-4 overflow-y-auto space-y-4">
+            <div class="flex items-start space-x-3">
+                <div class="w-10 h-10 bg-blue-500 rounded-full"></div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="font-bold text-green-400">System</span>
+                        <span class="text-xs text-gray-400">Today at 12:00 PM</span>
+                    </div>
+                    <p class="text-gray-300">Welcome to the server! Link your Firebase config in the code to start chatting for real.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-4 bg-gray-800">
+            <input type="text" id="user-input" placeholder="Message #general" 
+                   class="w-full bg-[#383A40] p-3 rounded-lg outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+    </div>
+
+    <script type="module">
+        // TO MAKE THIS WORK:
+        // 1. Go to Firebase Console -> Project Settings
+        // 2. Add a "Web App"
+        // 3. Paste your config object here:
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "YOUR_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Logic for sending messages would go here using the Firebase SDK
+        const input = document.getElementById('user-input');
+        const box = document.getElementById('message-box');
+
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && input.value !== '') {
+                const msg = input.value;
+                box.innerHTML += `
+                    <div class="flex items-start space-x-3">
+                        <div class="w-10 h-10 bg-purple-500 rounded-full"></div>
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="font-bold">You</span>
+                                <span class="text-xs text-gray-400">Just now</span>
+                            </div>
+                            <p class="text-gray-300">${msg}</p>
+                        </div>
+                    </div>
+                `;
+                input.value = '';
+                box.scrollTop = box.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html>
